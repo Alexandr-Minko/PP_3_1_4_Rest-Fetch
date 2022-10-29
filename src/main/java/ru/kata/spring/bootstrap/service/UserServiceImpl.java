@@ -1,15 +1,14 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.bootstrap.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.RoleRepository;
-import ru.kata.spring.boot_security.demo.dao.UserRepository;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.bootstrap.dao.RoleRepository;
+import ru.kata.spring.bootstrap.dao.UserRepository;
+import ru.kata.spring.bootstrap.model.User;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -18,11 +17,9 @@ import java.util.List;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -32,8 +29,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void saveUser(User user) {
-        user.setRoles(Collections.singleton(roleRepository.getById(1)));
-        //      user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -54,14 +49,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
+        User user = userRepository.findByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-
         return user;
     }
-
 
 }

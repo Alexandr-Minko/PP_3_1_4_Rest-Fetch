@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.configs;
+package ru.kata.spring.bootstrap.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -27,20 +28,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf()
+                .disable()
+
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
 
                 .and()
                 .formLogin().successHandler(successUserHandler)
-                .permitAll()
+                .loginPage("/login")
+                .loginProcessingUrl("/process_login")
+                .failureUrl("/login?error")
 
                 .and()
                 .logout()
-                .logoutSuccessUrl("/")
-                .permitAll();
+                // чтобы делать logout GET-ом, из ссылки <a..
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 
     }
 
@@ -49,11 +55,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return NoOpPasswordEncoder.getInstance();
     }
 
-    // настраивает аутентификацию
+    @Override
     protected void configure(AuthenticationManagerBuilder authMB) throws Exception {
         authMB.userDetailsService(userDetailsService);
         //     .passwordEncoder(getPasswordEncoder());
     }
-
 
 }

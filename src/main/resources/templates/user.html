@@ -1,19 +1,96 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
->
+<!doctype html>
+<html lang="en">
 <head>
-    <title>User page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Admin panel</title>
+
+    <!-- Подключение Bootstrap.CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
+
 <body>
-<h1>Страница пользователя</h1>
-<br>
-<h3>Доступна для USER и ADMIN</h3>
 
-<br><br><br>
-<form th:action="@{/logout}" th:method="POST">
-    <input type="submit" value="Выход"/>
-</form>
+<!-- НАВИГАЦИЯ -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Текст. Текущий user-->
+        <div class="navbar-brand">
+            <strong th:text="${currentUser.getEmail()}">userEmail</strong>
+            with roles:
+            <span th:text="${currentUser.getRolesToString()}">userRoles</span>
+        </div>
+        <!-- Ссылка. Logout-->
+        <ul class="navbar-nav">
+            <a class="nav-link" href="/logout">Logout</a>
+        </ul>
+    </div>
+</nav>
 
 
+<!-- ВКЛАДКА USER-->
+<div class="d-flex min-vh-100">
+
+    <!-- КНОПКИ-->
+    <ul class="nav  flex-column nav-pills col-2 mt-3 ">
+        <li class="nav-item">
+            <a class="nav-link active" href="#tabUser" data-bs-toggle="tab">User</a>
+        </li>
+    </ul>
+
+    <div class="tab-content px-1 pt-3 col bg-light">
+
+          <!-- USER-->
+        <div class="tab-pane active mx-4" id="tabUser">
+            <h1>User information-page</h1>
+            <div class="col mt-3">
+                <div class="container-fluid border">
+                    <div class="row">
+                        <div class="h5 m-2">About user</div>
+                    </div>
+                    <div class="row bg-white border">
+                        <div class="col mx-2">
+                            <!-- горизонтальная линия -->
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-2 mb-1 border-bottom mx-2"></div>
+                            <table class="table table-striped table-borderless bg-white">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">First name</th>
+                                    <th scope="col">Last name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:text="${currentUser.getId()}">Id</td>
+                                    <td th:text="${currentUser.getFirstName()}">First name</td>
+                                    <td th:text="${currentUser.getLastName}">Last name</td>
+                                    <td th:text="${currentUser.getAge}">Age</td>
+                                    <td th:text="${currentUser.getEmail}">Email</td>
+                                    <td th:text="${currentUser.getRolesToString}">Role</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- Подключение Bootstrap.JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
 </body>
 </html>
