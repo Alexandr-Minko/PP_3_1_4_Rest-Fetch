@@ -20,7 +20,7 @@ public class User implements UserDetails {
     private int age;
     private String email;
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     private Set<Role> roles = new HashSet<>();
 
     public User() {

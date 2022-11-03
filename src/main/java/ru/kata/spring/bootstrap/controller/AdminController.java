@@ -1,6 +1,7 @@
 package ru.kata.spring.bootstrap.controller;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,14 @@ public class AdminController {
     private List<Role> allRolesList;
     private final UserService userService;
     private final RoleService rolesService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserService userService, RoleService rolesService) {
+
+    public AdminController(UserService userService, RoleService rolesService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.rolesService = rolesService;
         this.allRolesList = rolesService.getAllRoles();
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/")
@@ -37,6 +41,7 @@ public class AdminController {
 
     @PostMapping()
     public String saveUser(@ModelAttribute("user") User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         return "redirect:/admin/";
     }

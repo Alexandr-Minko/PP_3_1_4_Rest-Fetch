@@ -1,5 +1,6 @@
 package ru.kata.spring.bootstrap.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +14,7 @@ import java.util.List;
 
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
@@ -28,11 +29,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void saveUser(User user) {
         userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void updateUser(User user) {
         userRepository.save(user);
     }
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        Hibernate.initialize(user.getRoles());
         return user;
     }
 
