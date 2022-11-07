@@ -1,4 +1,4 @@
-package ru.kata.spring.bootstrap.model;
+package ru.kata.spring.rest.model;
 
 
 import org.springframework.security.core.GrantedAuthority;
@@ -77,7 +77,7 @@ public class User implements UserDetails {
     public String getRolesToString() {
         String rolesToString = "";
         if (roles != null) {
-            for(Role role : roles) {
+            for (Role role : roles) {
                 rolesToString = rolesToString + role.getName().substring(5) + " ";
             }
         } else return "";

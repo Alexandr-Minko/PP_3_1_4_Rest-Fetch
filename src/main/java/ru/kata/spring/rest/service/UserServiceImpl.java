@@ -1,4 +1,4 @@
-package ru.kata.spring.bootstrap.service;
+package ru.kata.spring.rest.service;
 
 import org.hibernate.Hibernate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,9 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.bootstrap.dao.RoleRepository;
-import ru.kata.spring.bootstrap.dao.UserRepository;
-import ru.kata.spring.bootstrap.model.User;
+import ru.kata.spring.rest.dao.UserRepository;
+import ru.kata.spring.rest.model.User;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
