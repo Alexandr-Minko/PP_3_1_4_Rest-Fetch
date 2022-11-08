@@ -1,6 +1,7 @@
 package ru.kata.spring.rest.controller;
 
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.rest.model.User;
@@ -23,7 +24,8 @@ public class RESTController {
 
     @GetMapping("/currentUser")
     public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userService.getUserByEmail(userDetails.getUsername());
     }
 
     @GetMapping("/users")

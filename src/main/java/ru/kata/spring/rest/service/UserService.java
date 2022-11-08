@@ -1,6 +1,7 @@
 package ru.kata.spring.rest.service;
 
 
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.rest.model.User;
 
 import java.util.List;
@@ -12,7 +13,9 @@ public interface UserService {
 
     public void updateUser(User user);
 
-    public User getUser(int id);
+    public User getUserById(int id);
+
+    User getUserByEmail(String email);
 
     public void deleteUser(int id);
 
