@@ -1,19 +1,15 @@
 package ru.kata.spring.rest.service;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.rest.dao.UserRepository;
-import ru.kata.spring.rest.model.Role;
 import ru.kata.spring.rest.model.User;
 
-import java.util.HashSet;
+import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -21,9 +17,11 @@ import java.util.Set;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
+    private final EntityManager entityManager;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, EntityManager entityManager) {
         this.userRepository = userRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -62,12 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
-        if (user == null) throw new UsernameNotFoundException("User not found");
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        return entityManager.createQuery("SELECT u FROM User AS u JOIN FETCH u.roles WHERE u.email=:email", User.class)
+                .setParameter("email", username).getSingleResult();
     }
 }

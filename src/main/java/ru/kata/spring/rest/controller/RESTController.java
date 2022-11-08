@@ -24,8 +24,7 @@ public class RESTController {
 
     @GetMapping("/currentUser")
     public User getCurrentUser() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.getUserByEmail(userDetails.getUsername());
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @GetMapping("/users")
