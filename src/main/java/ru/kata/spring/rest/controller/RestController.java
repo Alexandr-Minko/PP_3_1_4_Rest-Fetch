@@ -1,7 +1,8 @@
 package ru.kata.spring.rest.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.rest.model.User;
@@ -10,37 +11,33 @@ import ru.kata.spring.rest.service.UserService;
 import java.util.List;
 
 
-@RestController
+@org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
-public class RESTController {
+public class RestController {
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
 
-    public RESTController(UserService userService, PasswordEncoder passwordEncoder) {
+    public RestController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/currentUser")
-    public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<User> getCurrentUser() {
+        return new ResponseEntity<>((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(), HttpStatus.OK);
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @PutMapping("/users")
     void updateUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
     }
 
     @PostMapping("/users")
     void newUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
     }
 
@@ -48,5 +45,4 @@ public class RESTController {
     public void deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
     }
-
 }
