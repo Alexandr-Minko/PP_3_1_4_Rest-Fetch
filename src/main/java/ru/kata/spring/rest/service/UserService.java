@@ -1,7 +1,6 @@
 package ru.kata.spring.rest.service;
 
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.rest.model.User;
 
 import java.util.List;
