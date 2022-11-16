@@ -18,23 +18,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private SuccessUserHandler successUserHandler;
-    private UserDetailsService userDetailsService;
+    private final SuccessUserHandler successUserHandler;
+    private final UserDetailsService userDetailsService;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private void setSuccessUserHandler(SuccessUserHandler successUserHandler) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, @Lazy UserDetailsService userDetailsService, @Lazy PasswordEncoder passwordEncoder) {
         this.successUserHandler = successUserHandler;
-    }
-
-    @Autowired
-    private void setUserDetailsService(@Lazy UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-    }
-
-    @Autowired
-    private void setPasswordEncoder(@Lazy PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
