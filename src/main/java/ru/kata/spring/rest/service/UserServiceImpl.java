@@ -11,6 +11,7 @@ import ru.kata.spring.rest.model.User;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -41,7 +42,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void updateUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User userFromDB = userRepository.findById(user.getId()).orElse(null);
+        if (!Objects.equals(user.getPassword(), userFromDB.getPassword())){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
     }
 
